@@ -1,0 +1,19 @@
+[package]
+name = "korean"
+version = "0.1.0"
+authors = ["kiwiyou <kiwiyou.dev@gmail.com>"]
+license = "MIT"
+edition = "2018"
+description = "Hangul manipulation library inspired by Hangul.js"
+repository = "https://github.com/kiwiyou/korean-rs"
+readme = "README.md"
+
+[badges]
+circle-ci = { repository = "https://github.com/kiwiyou/korean-rs" }
+
+[dev-dependencies]
+proptest = "0.9"
+
+[[example]]
+name = "nemo"
+path = "examples/nemo.rs"
