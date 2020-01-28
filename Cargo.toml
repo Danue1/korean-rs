@@ -9,7 +9,7 @@ repository = "https://github.com/kiwiyou/korean-rs"
 readme = "README.md"
 
 [badges]
-circle-ci = { repository = "https://github.com/kiwiyou/korean-rs" }
+circle-ci = { repository = "kiwiyou/korean-rs" }
 
 [dev-dependencies]
 proptest = "0.9"
