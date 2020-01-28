@@ -9,7 +9,7 @@
 `Cargo.toml`의 `dependencies`에 `korean`을 추가합니다.
 ```toml
 [dependencies]
-// ...
+# ...
 korean = "0.1"
 ```
 
