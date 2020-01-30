@@ -273,6 +273,130 @@ impl<T: Iterator<Item = char>> HangulAssemble for T {
     }
 }
 
+/// Represents a disassembled hangul letter
+/// 
+/// # Examples
+/// 
+/// Create with jamo parts:
+/// ```
+/// use korean::Hangul;
+/// 
+/// let word: char = Hangul::new('ㅁ', 'ㅏ', Some('ㄹ')).unwrap().into();
+/// assert_eq!('말', word);
+/// 
+/// let error = Hangul::new('ㄱ', '*', Some('ㅅ'));
+/// assert!(error.is_none());
+/// ```
+/// 
+/// Create from char:
+/// ```
+/// use korean::Hangul;
+/// use std::convert::TryInto;
+/// 
+/// let night: Hangul = '밤'.try_into().unwrap();
+/// assert_eq!(('ㅂ', 'ㅏ', Some('ㅁ')), night.parts());
+/// ```
+#[derive(Debug)]
+pub struct Hangul(u32, u32, u32);
+
+impl Hangul {
+    /// Creates a Hangul object with jamo parts.
+    /// 
+    /// Returns `None` when one of parts is invalid for its position.
+    pub fn new(cho: char, jung: char, jong: Option<char>) -> Option<Self> {
+        let cho = try_calculate_chosung_index(cho)?;
+        let jong = try_calculate_jongsung_index(jong)?;
+        if ('ㅏ'..='ㅣ').contains(&jung) {
+            Some(Hangul(cho, jung as u32 - 0x314F, jong))
+        } else {
+            None
+        }
+    }
+
+    /// Returns a tuple of parts which compose this Hangul object.
+    /// 
+    /// # Example
+    /// ```
+    /// use korean::Hangul;
+    /// use std::convert::TryInto;
+    ///
+    /// let sheep: Hangul = '양'.try_into().unwrap();
+    /// assert_eq!(('ㅇ', 'ㅑ', Some('ㅇ')), sheep.parts());
+    /// ```
+    pub fn parts(&self) -> (char, char, Option<char>) {
+        (
+            HANGUL_CHOSUNG_TO_COMPATIBILITY[self.0 as usize],
+            HANGUL_JUNGSUNG_TO_COMPATIBILITY[self.1 as usize],
+            if self.2 == 0 {
+                None
+            } else {
+                Some(HANGUL_JONGSUNG_TO_COMPATIBILITY[self.2 as usize - 1])
+            }
+        )
+    }
+
+    /// Sets chosung of Hangul.
+    /// 
+    /// Returns `Err(cho)` when the parameter is not valid for chosung position.
+    pub fn set_cho(&mut self, cho: char) -> Result<(), char> {
+        self.0 = try_calculate_chosung_index(cho).ok_or(cho)?;
+        Ok(())
+    }
+
+    /// Sets jungsung of Hangul.
+    ///
+    /// Returns `Err(jung)` when the parameter is not valid for jungsung position.
+    pub fn set_jung(&mut self, jung: char) -> Result<(), char> {
+        if ('ㅏ'..='ㅣ').contains(&jung) {
+            self.1 = jung as u32 - 0x314F;
+            Ok(())
+        } else {
+            Err(jung)
+        }
+    }
+
+    /// Sets jongsung of Hangul.
+    /// 
+    /// Returns `Err(jong)` when the parameter is not valid for jongsung position.
+    pub fn set_jong(&mut self, jong: Option<char>) -> Result<(), char> {
+        if let Some(jong) = try_calculate_jongsung_index(jong) {
+            self.1 = jong;
+            Ok(())
+        } else {
+            Err(jong.unwrap())
+        }
+    }
+}
+
+impl std::convert::TryFrom<char> for Hangul {
+    type Error = char;
+
+    fn try_from(letter: char) -> Result<Self, char> {
+        match letter {
+            '가'..='힣' => {
+                let mut code = letter as u32 - 0xAC00;
+                let jongsung = code % 28;
+                code /= 28;
+                let jungsung = code % 21;
+                code /= 21;
+                let chosung = code;
+                Ok(Hangul(
+                    chosung,
+                    jungsung,
+                    jongsung,
+                ))
+            }
+            _ => Err(letter),
+        }
+    }
+}
+
+impl From<Hangul> for char {
+    fn from(hangul: Hangul) -> char {
+        std::char::from_u32(0xAC00 + (hangul.0 * 21 + hangul.1) * 28 + hangul.2).unwrap()
+    }
+}
+
 // Maps chosung (onset) to compatibility jamo
 const HANGUL_CHOSUNG_TO_COMPATIBILITY: [char; 19] = [
     'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ',
@@ -371,12 +495,7 @@ fn decompose(c: char, buffer: &mut Vec<char>) -> Option<char> {
 }
 
 fn build_hangul(cho: char, jung: char, jong: Option<char>) -> char {
-    std::char::from_u32(
-        0xAC00
-            + (calculate_chosung_index(cho) * 21 + jung as u32 - 0x314F) * 28
-            + calculate_jongsung_index(jong),
-    )
-    .unwrap()
+    Hangul::new(cho, jung, jong).unwrap().into()
 }
 
 fn combine_jungsung(a: char, b: char) -> Option<char> {
@@ -425,30 +544,40 @@ fn is_jongsung(a: char) -> bool {
     }
 }
 
-fn calculate_chosung_index(cho: char) -> u32 {
-    let index = cho as u32 - 0x3131;
-    match cho {
-        'ㄱ'..='ㄲ' => index,
-        'ㄴ' => index - 1,
-        'ㄷ'..='ㄹ' => index - 3,
-        'ㅁ'..='ㅃ' => index - 10,
-        'ㅅ'..='ㅎ' => index - 11,
-        _ => panic!("Chosung out of bound: {}", cho),
+fn try_calculate_chosung_index(cho: char) -> Option<u32> {
+    let index = cho as u32;
+    if index < 0x3131 {
+        None
+    } else {
+        let index = index - 0x3131;
+        match cho {
+            'ㄱ'..='ㄲ' => Some(index),
+            'ㄴ' => Some(index - 1),
+            'ㄷ'..='ㄹ' => Some(index - 3),
+            'ㅁ'..='ㅃ' => Some(index - 10),
+            'ㅅ'..='ㅎ' => Some(index - 11),
+            _ => None,
+        }
     }
 }
 
-fn calculate_jongsung_index(jong: Option<char>) -> u32 {
+fn try_calculate_jongsung_index(jong: Option<char>) -> Option<u32> {
     if let Some(jong) = jong {
-        let index = jong as u32 - 0x3131 + 1;
-        match jong {
-            'ㄱ'..='ㄷ' => index,
-            'ㄹ'..='ㅂ' => index - 1,
-            'ㅄ'..='ㅈ' => index - 2,
-            'ㅊ'..='ㅎ' => index - 3,
-            _ => panic!("Jongsung out of bound: {}", jong),
+        let index = jong as u32;
+        if index < 0x3131 {
+            None
+        } else { 
+            let index = index - 0x3131 + 1;
+            match jong {
+                'ㄱ'..='ㄷ' => Some(index),
+                'ㄹ'..='ㅂ' => Some(index - 1),
+                'ㅄ'..='ㅈ' => Some(index - 2),
+                'ㅊ'..='ㅎ' => Some(index - 3),
+                _ => None,
+            }
         }
     } else {
-        0
+        Some(0)
     }
 }
 
@@ -513,10 +642,62 @@ mod test {
         assert_eq!("훑개", "ㅎㅜㄹㅌㄱㅐ".chars().assemble());
     }
 
+    #[test]
+    fn disassemble_single() {
+        use std::convert::*;
+        let disassembled: Hangul = '닭'.try_into().unwrap();
+        assert_eq!(('ㄷ', 'ㅏ', Some('ㄺ')), disassembled.parts());
+    }
+
+    #[test]
+    fn disassemble_single_no_jongsung() {
+        use std::convert::*;
+        let disassembled: Hangul = '깨'.try_into().unwrap();
+        assert_eq!(('ㄲ', 'ㅐ', None), disassembled.parts());
+    }
+
+    #[test]
+    fn disassemble_nonhangul_error() {
+        use std::convert::*;
+        let disassembled: Result<Hangul, _> = 'a'.try_into();
+        assert!(disassembled.is_err());
+    }
+
+    #[test]
+    fn assemble_single() {
+        let assembled: char = Hangul::new('ㅂ', 'ㅏ', Some('ㅌ')).unwrap().into();
+        assert_eq!('밭', assembled);
+    }
+
+    #[test]
+    fn assemble_single_no_jongsung() {
+        let assembled: char = Hangul::new('ㅊ', 'ㅟ', None).unwrap().into();
+        assert_eq!('취', assembled);
+    }
+
+    #[test]
+    fn assemble_nonhangul_error() {
+        assert!(Hangul::new('a', 'b', None).is_none());
+    }
+
     proptest! {
         #[test]
         fn no_panic(korean in "[가-힣ㄱ-ㅎㅏ-ㅣ]+") {
             korean.disassemble().assemble();
+        }
+
+        #[test]
+        fn no_panic_single(letter in proptest::arbitrary::any::<char>()) {
+            use std::convert::*;
+            let _: Option<char> = letter.try_into().ok().and_then(|hangul: Hangul| hangul.try_into().ok());
+        }
+
+        #[test]
+        fn hangul_convert_redundant(letter in proptest::char::range('가', '\u{D7A4}')) {
+            use std::convert::*;
+            let disassembled: Hangul = letter.try_into().unwrap();
+            let processed = disassembled.into();
+            assert_eq!(letter, processed);
         }
     }
 }
