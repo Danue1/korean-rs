@@ -108,11 +108,11 @@ impl JongseongCharacter {
 
 impl CharacterInformation for JongseongCharacter {
     fn is_jaeum(&self) -> bool {
-        false
+        true
     }
 
     fn is_moeum(&self) -> bool {
-        true
+        false
     }
 
     fn to_composable(&self) -> u32 {
@@ -126,64 +126,64 @@ mod tests {
 
     #[test]
     fn is_jaeum() {
-        assert_eq!(Giyeok.is_jaeum(), false);
-        assert_eq!(SsangGiyeok.is_jaeum(), false);
-        assert_eq!(GiyeokSiot.is_jaeum(), false);
-        assert_eq!(Nieun.is_jaeum(), false);
-        assert_eq!(NieunJieut.is_jaeum(), false);
-        assert_eq!(NieunHieuh.is_jaeum(), false);
-        assert_eq!(Digeut.is_jaeum(), false);
-        assert_eq!(Rieul.is_jaeum(), false);
-        assert_eq!(RieulGiyeok.is_jaeum(), false);
-        assert_eq!(RieulMieum.is_jaeum(), false);
-        assert_eq!(RieulBieup.is_jaeum(), false);
-        assert_eq!(RieulSiot.is_jaeum(), false);
-        assert_eq!(RieulTieut.is_jaeum(), false);
-        assert_eq!(RieulPieup.is_jaeum(), false);
-        assert_eq!(RieulHieuh.is_jaeum(), false);
-        assert_eq!(Mieum.is_jaeum(), false);
-        assert_eq!(Bieup.is_jaeum(), false);
-        assert_eq!(BieupSiot.is_jaeum(), false);
-        assert_eq!(Siot.is_jaeum(), false);
-        assert_eq!(SsangSiot.is_jaeum(), false);
-        assert_eq!(Ieung.is_jaeum(), false);
-        assert_eq!(Jieut.is_jaeum(), false);
-        assert_eq!(Chieut.is_jaeum(), false);
-        assert_eq!(Kieuk.is_jaeum(), false);
-        assert_eq!(Tieut.is_jaeum(), false);
-        assert_eq!(Pieup.is_jaeum(), false);
-        assert_eq!(Hieuh.is_jaeum(), false);
+        assert_eq!(Giyeok.is_jaeum(), true);
+        assert_eq!(SsangGiyeok.is_jaeum(), true);
+        assert_eq!(GiyeokSiot.is_jaeum(), true);
+        assert_eq!(Nieun.is_jaeum(), true);
+        assert_eq!(NieunJieut.is_jaeum(), true);
+        assert_eq!(NieunHieuh.is_jaeum(), true);
+        assert_eq!(Digeut.is_jaeum(), true);
+        assert_eq!(Rieul.is_jaeum(), true);
+        assert_eq!(RieulGiyeok.is_jaeum(), true);
+        assert_eq!(RieulMieum.is_jaeum(), true);
+        assert_eq!(RieulBieup.is_jaeum(), true);
+        assert_eq!(RieulSiot.is_jaeum(), true);
+        assert_eq!(RieulTieut.is_jaeum(), true);
+        assert_eq!(RieulPieup.is_jaeum(), true);
+        assert_eq!(RieulHieuh.is_jaeum(), true);
+        assert_eq!(Mieum.is_jaeum(), true);
+        assert_eq!(Bieup.is_jaeum(), true);
+        assert_eq!(BieupSiot.is_jaeum(), true);
+        assert_eq!(Siot.is_jaeum(), true);
+        assert_eq!(SsangSiot.is_jaeum(), true);
+        assert_eq!(Ieung.is_jaeum(), true);
+        assert_eq!(Jieut.is_jaeum(), true);
+        assert_eq!(Chieut.is_jaeum(), true);
+        assert_eq!(Kieuk.is_jaeum(), true);
+        assert_eq!(Tieut.is_jaeum(), true);
+        assert_eq!(Pieup.is_jaeum(), true);
+        assert_eq!(Hieuh.is_jaeum(), true);
     }
 
     #[test]
     fn is_moeum() {
-        assert_eq!(Giyeok.is_moeum(), true);
-        assert_eq!(SsangGiyeok.is_moeum(), true);
-        assert_eq!(GiyeokSiot.is_moeum(), true);
-        assert_eq!(Nieun.is_moeum(), true);
-        assert_eq!(NieunJieut.is_moeum(), true);
-        assert_eq!(NieunHieuh.is_moeum(), true);
-        assert_eq!(Digeut.is_moeum(), true);
-        assert_eq!(Rieul.is_moeum(), true);
-        assert_eq!(RieulGiyeok.is_moeum(), true);
-        assert_eq!(RieulMieum.is_moeum(), true);
-        assert_eq!(RieulBieup.is_moeum(), true);
-        assert_eq!(RieulSiot.is_moeum(), true);
-        assert_eq!(RieulTieut.is_moeum(), true);
-        assert_eq!(RieulPieup.is_moeum(), true);
-        assert_eq!(RieulHieuh.is_moeum(), true);
-        assert_eq!(Mieum.is_moeum(), true);
-        assert_eq!(Bieup.is_moeum(), true);
-        assert_eq!(BieupSiot.is_moeum(), true);
-        assert_eq!(Siot.is_moeum(), true);
-        assert_eq!(SsangSiot.is_moeum(), true);
-        assert_eq!(Ieung.is_moeum(), true);
-        assert_eq!(Jieut.is_moeum(), true);
-        assert_eq!(Chieut.is_moeum(), true);
-        assert_eq!(Kieuk.is_moeum(), true);
-        assert_eq!(Tieut.is_moeum(), true);
-        assert_eq!(Pieup.is_moeum(), true);
-        assert_eq!(Hieuh.is_moeum(), true);
+        assert_eq!(Giyeok.is_moeum(), false);
+        assert_eq!(SsangGiyeok.is_moeum(), false);
+        assert_eq!(GiyeokSiot.is_moeum(), false);
+        assert_eq!(Nieun.is_moeum(), false);
+        assert_eq!(NieunJieut.is_moeum(), false);
+        assert_eq!(NieunHieuh.is_moeum(), false);
+        assert_eq!(Digeut.is_moeum(), false);
+        assert_eq!(Rieul.is_moeum(), false);
+        assert_eq!(RieulGiyeok.is_moeum(), false);
+        assert_eq!(RieulMieum.is_moeum(), false);
+        assert_eq!(RieulBieup.is_moeum(), false);
+        assert_eq!(RieulSiot.is_moeum(), false);
+        assert_eq!(RieulTieut.is_moeum(), false);
+        assert_eq!(RieulPieup.is_moeum(), false);
+        assert_eq!(RieulHieuh.is_moeum(), false);
+        assert_eq!(Mieum.is_moeum(), false);
+        assert_eq!(Bieup.is_moeum(), false);
+        assert_eq!(BieupSiot.is_moeum(), false);
+        assert_eq!(Siot.is_moeum(), false);
+        assert_eq!(SsangSiot.is_moeum(), false);
+        assert_eq!(Ieung.is_moeum(), false);
+        assert_eq!(Jieut.is_moeum(), false);
+        assert_eq!(Chieut.is_moeum(), false);
+        assert_eq!(Kieuk.is_moeum(), false);
+        assert_eq!(Tieut.is_moeum(), false);
+        assert_eq!(Pieup.is_moeum(), false);
+        assert_eq!(Hieuh.is_moeum(), false);
     }
 
     #[test]
