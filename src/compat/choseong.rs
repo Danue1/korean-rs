@@ -145,3 +145,58 @@ impl CharacterInformation for CompatChoseong {
         self.0.to_composable()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn is_choseong_with_u32() {
+        assert_eq!(0x1099.is_compat_choseong(), false);
+        assert_eq!(0x3131.is_compat_choseong(), true);
+        assert_eq!(0x3132.is_compat_choseong(), true);
+        assert_eq!(0x3134.is_compat_choseong(), true);
+        assert_eq!(0x3137.is_compat_choseong(), true);
+        assert_eq!(0x3138.is_compat_choseong(), true);
+        assert_eq!(0x3139.is_compat_choseong(), true);
+        assert_eq!(0x3141.is_compat_choseong(), true);
+        assert_eq!(0x3142.is_compat_choseong(), true);
+        assert_eq!(0x3143.is_compat_choseong(), true);
+        assert_eq!(0x3145.is_compat_choseong(), true);
+        assert_eq!(0x3146.is_compat_choseong(), true);
+        assert_eq!(0x3147.is_compat_choseong(), true);
+        assert_eq!(0x3148.is_compat_choseong(), true);
+        assert_eq!(0x3149.is_compat_choseong(), true);
+        assert_eq!(0x313A.is_compat_choseong(), true);
+        assert_eq!(0x314B.is_compat_choseong(), true);
+        assert_eq!(0x314C.is_compat_choseong(), true);
+        assert_eq!(0x314D.is_compat_choseong(), true);
+        assert_eq!(0x314E.is_compat_choseong(), true);
+        assert_eq!(0x1113.is_compat_choseong(), false);
+    }
+
+    #[test]
+    fn is_choseong_with_char() {
+        assert_eq!(0x1099.is_compat_choseong(), false);
+        assert_eq!('ㄱ'.is_compat_choseong(), true); // 0x3131
+        assert_eq!('ㄲ'.is_compat_choseong(), true); // 0x3132
+        assert_eq!('ㄴ'.is_compat_choseong(), true); // 0x3134
+        assert_eq!('ㄷ'.is_compat_choseong(), true); // 0x3137
+        assert_eq!('ㄸ'.is_compat_choseong(), true); // 0x3138
+        assert_eq!('ㄹ'.is_compat_choseong(), true); // 0x3139
+        assert_eq!('ㅁ'.is_compat_choseong(), true); // 0x3141
+        assert_eq!('ㅂ'.is_compat_choseong(), true); // 0x3142
+        assert_eq!('ㅃ'.is_compat_choseong(), true); // 0x3143
+        assert_eq!('ㅅ'.is_compat_choseong(), true); // 0x3145
+        assert_eq!('ㅆ'.is_compat_choseong(), true); // 0x3146
+        assert_eq!('ㅇ'.is_compat_choseong(), true); // 0x3147
+        assert_eq!('ㅈ'.is_compat_choseong(), true); // 0x3148
+        assert_eq!('ㅉ'.is_compat_choseong(), true); // 0x3149
+        assert_eq!('ㄺ'.is_compat_choseong(), true); // 0x313A
+        assert_eq!('ㅋ'.is_compat_choseong(), true); // 0x314B
+        assert_eq!('ㅌ'.is_compat_choseong(), true); // 0x314C
+        assert_eq!('ㅍ'.is_compat_choseong(), true); // 0x314D
+        assert_eq!('ㅎ'.is_compat_choseong(), true); // 0x314E
+        assert_eq!(0x1113.is_compat_choseong(), false);
+    }
+}

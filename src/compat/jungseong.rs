@@ -151,3 +151,62 @@ impl CharacterInformation for CompatJungseong {
         self.0.to_composable()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn is_choseong_with_u32() {
+        assert_eq!(0x1160.is_compat_jungseong(), false);
+        assert_eq!(0x314F.is_compat_jungseong(), true);
+        assert_eq!(0x3150.is_compat_jungseong(), true);
+        assert_eq!(0x3151.is_compat_jungseong(), true);
+        assert_eq!(0x3152.is_compat_jungseong(), true);
+        assert_eq!(0x3153.is_compat_jungseong(), true);
+        assert_eq!(0x3154.is_compat_jungseong(), true);
+        assert_eq!(0x3155.is_compat_jungseong(), true);
+        assert_eq!(0x3156.is_compat_jungseong(), true);
+        assert_eq!(0x3157.is_compat_jungseong(), true);
+        assert_eq!(0x3158.is_compat_jungseong(), true);
+        assert_eq!(0x3159.is_compat_jungseong(), true);
+        assert_eq!(0x315A.is_compat_jungseong(), true);
+        assert_eq!(0x315B.is_compat_jungseong(), true);
+        assert_eq!(0x315C.is_compat_jungseong(), true);
+        assert_eq!(0x315D.is_compat_jungseong(), true);
+        assert_eq!(0x315E.is_compat_jungseong(), true);
+        assert_eq!(0x315F.is_compat_jungseong(), true);
+        assert_eq!(0x3160.is_compat_jungseong(), true);
+        assert_eq!(0x3161.is_compat_jungseong(), true);
+        assert_eq!(0x3162.is_compat_jungseong(), true);
+        assert_eq!(0x3163.is_compat_jungseong(), true);
+        assert_eq!(0x1176.is_compat_jungseong(), false);
+    }
+
+    #[test]
+    fn is_choseong_with_char() {
+        assert_eq!('\u{1160}'.is_compat_jungseong(), false);
+        assert_eq!('ㅏ'.is_compat_jungseong(), true); // 0x314F
+        assert_eq!('ㅐ'.is_compat_jungseong(), true); // 0x3150
+        assert_eq!('ㅑ'.is_compat_jungseong(), true); // 0x3151
+        assert_eq!('ㅒ'.is_compat_jungseong(), true); // 0x3152
+        assert_eq!('ㅓ'.is_compat_jungseong(), true); // 0x3153
+        assert_eq!('ㅔ'.is_compat_jungseong(), true); // 0x3154
+        assert_eq!('ㅕ'.is_compat_jungseong(), true); // 0x3155
+        assert_eq!('ㅖ'.is_compat_jungseong(), true); // 0x3156
+        assert_eq!('ㅗ'.is_compat_jungseong(), true); // 0x3157
+        assert_eq!('ㅘ'.is_compat_jungseong(), true); // 0x3158
+        assert_eq!('ㅙ'.is_compat_jungseong(), true); // 0x3159
+        assert_eq!('ㅚ'.is_compat_jungseong(), true); // 0x315A
+        assert_eq!('ㅛ'.is_compat_jungseong(), true); // 0x315B
+        assert_eq!('ㅜ'.is_compat_jungseong(), true); // 0x315C
+        assert_eq!('ㅝ'.is_compat_jungseong(), true); // 0x315D
+        assert_eq!('ㅞ'.is_compat_jungseong(), true); // 0x315E
+        assert_eq!('ㅟ'.is_compat_jungseong(), true); // 0x315F
+        assert_eq!('ㅠ'.is_compat_jungseong(), true); // 0x3160
+        assert_eq!('ㅡ'.is_compat_jungseong(), true); // 0x3161
+        assert_eq!('ㅢ'.is_compat_jungseong(), true); // 0x3162
+        assert_eq!('ㅣ'.is_compat_jungseong(), true); // 0x3163
+        assert_eq!('\u{1176}'.is_compat_jungseong(), false);
+    }
+}
