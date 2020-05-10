@@ -3,7 +3,7 @@ use crate::choseong::*;
 use crate::constants::*;
 use crate::jongseong::*;
 use crate::jungseong::*;
-use std::convert::TryFrom;
+use std::convert::{TryFrom, TryInto};
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Syllable(u32);
@@ -24,11 +24,7 @@ impl TryFrom<char> for Syllable {
     type Error = ();
 
     fn try_from(item: char) -> Result<Self, Self::Error> {
-        if item.is_syllable() {
-            Ok(Syllable(item as u32))
-        } else {
-            Err(())
-        }
+        (item as u32).try_into()
     }
 }
 
