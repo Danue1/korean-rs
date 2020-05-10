@@ -1,7 +1,8 @@
 use crate::characters::*;
-use crate::compat::*;
+use crate::choseong::*;
 use crate::constants::*;
-use crate::normal::*;
+use crate::jongseong::*;
+use crate::jungseong::*;
 use std::convert::TryFrom;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
@@ -39,10 +40,7 @@ impl From<&Syllable> for u32 {
 
 impl From<&Syllable> for char {
     fn from(item: &Syllable) -> char {
-        match std::char::from_u32(item.0) {
-            Some(character) => character,
-            None => unreachable!(),
-        }
+        std::char::from_u32(item.0).unwrap_or_else(|| unreachable!())
     }
 }
 
@@ -50,30 +48,10 @@ impl TryFrom<(&u32, &u32, Option<u32>)> for Syllable {
     type Error = ();
 
     fn try_from(item: (&u32, &u32, Option<u32>)) -> Result<Self, Self::Error> {
-        let choseong = if let Ok(character) = Choseong::try_from(*item.0) {
-            character.to_composable()
-        } else if let Ok(character) = CompatChoseong::try_from(*item.0) {
-            character.to_composable()
-        } else {
-            return Err(());
-        };
-        let jungseong = if let Ok(character) = Jungseong::try_from(*item.1) {
-            character.to_composable()
-        } else if let Ok(character) = CompatJungseong::try_from(*item.1) {
-            character.to_composable()
-        } else {
-            return Err(());
-        };
+        let choseong = Choseong::try_from(*item.0)?.to_composable();
+        let jungseong = Jungseong::try_from(*item.1)?.to_composable();
         let jongseong = match item.2 {
-            Some(code) => {
-                if let Ok(character) = Jongseong::try_from(code) {
-                    character.to_composable()
-                } else if let Ok(character) = CompatJongseong::try_from(code) {
-                    character.to_composable()
-                } else {
-                    return Err(());
-                }
-            }
+            Some(code) => Jongseong::try_from(code)?.to_composable(),
             None => 0,
         };
 
@@ -99,27 +77,10 @@ impl TryFrom<(&Choseong, &Jungseong, Option<&Jongseong>)> for Syllable {
     fn try_from(item: (&Choseong, &Jungseong, Option<&Jongseong>)) -> Result<Self, Self::Error> {
         let choseong = item.0.to_composable();
         let jungseong = item.1.to_composable();
-        let jongseong = match item.2 {
-            Some(character) => character.to_composable(),
-            None => 0,
-        };
-
-        Syllable::try_from(choseong + jungseong + jongseong + HANGEUL_OFFSET)
-    }
-}
-
-impl TryFrom<(&CompatChoseong, &CompatJungseong, Option<&CompatJongseong>)> for Syllable {
-    type Error = ();
-
-    fn try_from(
-        item: (&CompatChoseong, &CompatJungseong, Option<&CompatJongseong>),
-    ) -> Result<Self, Self::Error> {
-        let choseong = item.0.to_composable();
-        let jungseong = item.1.to_composable();
-        let jongseong = match item.2 {
-            Some(character) => character.to_composable(),
-            None => 0,
-        };
+        let jongseong = item
+            .2
+            .map(|character| character.to_composable())
+            .unwrap_or(0);
 
         Syllable::try_from(choseong + jungseong + jongseong + HANGEUL_OFFSET)
     }
@@ -139,26 +100,17 @@ impl From<&Syllable> for (u32, u32, Option<u32>) {
 
 impl From<&Syllable> for (char, char, Option<char>) {
     fn from(item: &Syllable) -> (char, char, Option<char>) {
-        let choseong: char = if let Ok(character) = &Choseong::try_from(item.0) {
-            character.into()
-        } else if let Ok(character) = &CompatChoseong::try_from(item.0) {
-            character.into()
-        } else {
-            unreachable!();
+        let choseong: char = match &Choseong::try_from(item.0) {
+            Ok(character) => character.into(),
+            Err(_) => unreachable!(),
         };
-        let jungseong: char = if let Ok(character) = &Jungseong::try_from(item.0) {
-            character.into()
-        } else if let Ok(character) = &CompatJungseong::try_from(item.0) {
-            character.into()
-        } else {
-            unreachable!();
+        let jungseong: char = match &Jungseong::try_from(item.0) {
+            Ok(character) => character.into(),
+            Err(_) => unreachable!(),
         };
-        let jongseong: Option<char> = if let Ok(character) = &Jongseong::try_from(item.0) {
-            Some(character.into())
-        } else if let Ok(character) = &CompatJongseong::try_from(item.0) {
-            Some(character.into())
-        } else {
-            None
+        let jongseong: Option<char> = match &Jongseong::try_from(item.0) {
+            Ok(character) => Some(character.into()),
+            Err(_) => None,
         };
 
         (choseong, jungseong, jongseong)
@@ -167,44 +119,18 @@ impl From<&Syllable> for (char, char, Option<char>) {
 
 impl From<&Syllable> for Option<(Choseong, Jungseong, Option<Jongseong>)> {
     fn from(item: &Syllable) -> Option<(Choseong, Jungseong, Option<Jongseong>)> {
-        let choseong: Choseong = if let Ok(character) = Choseong::try_from(item.0) {
-            character.into()
-        } else {
-            return None;
+        let choseong: Choseong = match Choseong::try_from(item.0) {
+            Ok(character) => character.into(),
+            Err(_) => unreachable!(),
         };
-        let jungseong: Jungseong = if let Ok(character) = Jungseong::try_from(item.0) {
-            character.into()
-        } else {
-            return None;
+        let jungseong: Jungseong = match Jungseong::try_from(item.0) {
+            Ok(character) => character.into(),
+            Err(_) => unreachable!(),
         };
-        let jongseong: Option<Jongseong> = if let Ok(character) = Jongseong::try_from(item.0) {
-            Some(character.into())
-        } else {
-            None
+        let jongseong: Option<Jongseong> = match Jongseong::try_from(item.0) {
+            Ok(character) => Some(character.into()),
+            Err(_) => None,
         };
-
-        Some((choseong, jungseong, jongseong))
-    }
-}
-
-impl From<&Syllable> for Option<(CompatChoseong, CompatJungseong, Option<CompatJongseong>)> {
-    fn from(item: &Syllable) -> Option<(CompatChoseong, CompatJungseong, Option<CompatJongseong>)> {
-        let choseong: CompatChoseong = if let Ok(character) = CompatChoseong::try_from(item.0) {
-            character.into()
-        } else {
-            return None;
-        };
-        let jungseong: CompatJungseong = if let Ok(character) = CompatJungseong::try_from(item.0) {
-            character.into()
-        } else {
-            return None;
-        };
-        let jongseong: Option<CompatJongseong> =
-            if let Ok(character) = CompatJongseong::try_from(item.0) {
-                Some(character.into())
-            } else {
-                None
-            };
 
         Some((choseong, jungseong, jongseong))
     }
@@ -280,35 +206,5 @@ impl JongseongInformation for Syllable {
 
     fn has_jongseong(&self) -> bool {
         self.0.has_jongseong()
-    }
-}
-
-impl CompatChoseongInformation for Syllable {
-    fn is_compat_choseong(&self) -> bool {
-        self.0.is_compat_choseong()
-    }
-
-    fn has_compat_choseong(&self) -> bool {
-        self.0.has_compat_choseong()
-    }
-}
-
-impl CompatJungseongInformation for Syllable {
-    fn is_compat_jungseong(&self) -> bool {
-        self.0.is_compat_jungseong()
-    }
-
-    fn has_compat_jungseong(&self) -> bool {
-        self.0.has_compat_jungseong()
-    }
-}
-
-impl CompatJongseongInformation for Syllable {
-    fn is_compat_jongseong(&self) -> bool {
-        self.0.is_compat_jongseong()
-    }
-
-    fn has_compat_jongseong(&self) -> bool {
-        self.0.has_compat_jongseong()
     }
 }

@@ -1,11 +1,13 @@
 pub mod characters;
-pub mod compat;
+pub mod choseong;
 pub mod constants;
-pub mod normal;
+pub mod jongseong;
+pub mod jungseong;
 pub mod syllable;
 
 pub use characters::*;
-pub use compat::*;
+pub use choseong::*;
 pub use constants::*;
-pub use normal::*;
+pub use jongseong::*;
+pub use jungseong::*;
 pub use syllable::*;
