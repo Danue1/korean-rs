@@ -91,11 +91,11 @@ impl JungseongCharacter {
 
 impl CharacterInformation for JungseongCharacter {
     fn is_jaeum(&self) -> bool {
-        true
+        false
     }
 
     fn is_moeum(&self) -> bool {
-        false
+        true
     }
 
     fn to_composable(&self) -> u32 {
@@ -109,52 +109,52 @@ mod tests {
 
     #[test]
     fn is_jaeum() {
-        assert_eq!(A.is_jaeum(), true);
-        assert_eq!(AE.is_jaeum(), true);
-        assert_eq!(YA.is_jaeum(), true);
-        assert_eq!(YAE.is_jaeum(), true);
-        assert_eq!(EO.is_jaeum(), true);
-        assert_eq!(E.is_jaeum(), true);
-        assert_eq!(YEO.is_jaeum(), true);
-        assert_eq!(YE.is_jaeum(), true);
-        assert_eq!(O.is_jaeum(), true);
-        assert_eq!(WA.is_jaeum(), true);
-        assert_eq!(WAE.is_jaeum(), true);
-        assert_eq!(OE.is_jaeum(), true);
-        assert_eq!(YO.is_jaeum(), true);
-        assert_eq!(U.is_jaeum(), true);
-        assert_eq!(WEO.is_jaeum(), true);
-        assert_eq!(WE.is_jaeum(), true);
-        assert_eq!(WI.is_jaeum(), true);
-        assert_eq!(YU.is_jaeum(), true);
-        assert_eq!(EU.is_jaeum(), true);
-        assert_eq!(YI.is_jaeum(), true);
-        assert_eq!(I.is_jaeum(), true);
+        assert_eq!(A.is_jaeum(), false);
+        assert_eq!(AE.is_jaeum(), false);
+        assert_eq!(YA.is_jaeum(), false);
+        assert_eq!(YAE.is_jaeum(), false);
+        assert_eq!(EO.is_jaeum(), false);
+        assert_eq!(E.is_jaeum(), false);
+        assert_eq!(YEO.is_jaeum(), false);
+        assert_eq!(YE.is_jaeum(), false);
+        assert_eq!(O.is_jaeum(), false);
+        assert_eq!(WA.is_jaeum(), false);
+        assert_eq!(WAE.is_jaeum(), false);
+        assert_eq!(OE.is_jaeum(), false);
+        assert_eq!(YO.is_jaeum(), false);
+        assert_eq!(U.is_jaeum(), false);
+        assert_eq!(WEO.is_jaeum(), false);
+        assert_eq!(WE.is_jaeum(), false);
+        assert_eq!(WI.is_jaeum(), false);
+        assert_eq!(YU.is_jaeum(), false);
+        assert_eq!(EU.is_jaeum(), false);
+        assert_eq!(YI.is_jaeum(), false);
+        assert_eq!(I.is_jaeum(), false);
     }
 
     #[test]
     fn is_moeum() {
-        assert_eq!(A.is_moeum(), false);
-        assert_eq!(AE.is_moeum(), false);
-        assert_eq!(YA.is_moeum(), false);
-        assert_eq!(YAE.is_moeum(), false);
-        assert_eq!(EO.is_moeum(), false);
-        assert_eq!(E.is_moeum(), false);
-        assert_eq!(YEO.is_moeum(), false);
-        assert_eq!(YE.is_moeum(), false);
-        assert_eq!(O.is_moeum(), false);
-        assert_eq!(WA.is_moeum(), false);
-        assert_eq!(WAE.is_moeum(), false);
-        assert_eq!(OE.is_moeum(), false);
-        assert_eq!(YO.is_moeum(), false);
-        assert_eq!(U.is_moeum(), false);
-        assert_eq!(WEO.is_moeum(), false);
-        assert_eq!(WE.is_moeum(), false);
-        assert_eq!(WI.is_moeum(), false);
-        assert_eq!(YU.is_moeum(), false);
-        assert_eq!(EU.is_moeum(), false);
-        assert_eq!(YI.is_moeum(), false);
-        assert_eq!(I.is_moeum(), false);
+        assert_eq!(A.is_moeum(), true);
+        assert_eq!(AE.is_moeum(), true);
+        assert_eq!(YA.is_moeum(), true);
+        assert_eq!(YAE.is_moeum(), true);
+        assert_eq!(EO.is_moeum(), true);
+        assert_eq!(E.is_moeum(), true);
+        assert_eq!(YEO.is_moeum(), true);
+        assert_eq!(YE.is_moeum(), true);
+        assert_eq!(O.is_moeum(), true);
+        assert_eq!(WA.is_moeum(), true);
+        assert_eq!(WAE.is_moeum(), true);
+        assert_eq!(OE.is_moeum(), true);
+        assert_eq!(YO.is_moeum(), true);
+        assert_eq!(U.is_moeum(), true);
+        assert_eq!(WEO.is_moeum(), true);
+        assert_eq!(WE.is_moeum(), true);
+        assert_eq!(WI.is_moeum(), true);
+        assert_eq!(YU.is_moeum(), true);
+        assert_eq!(EU.is_moeum(), true);
+        assert_eq!(YI.is_moeum(), true);
+        assert_eq!(I.is_moeum(), true);
     }
 
     #[test]
