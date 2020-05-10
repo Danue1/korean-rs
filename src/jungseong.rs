@@ -89,9 +89,13 @@ impl From<&Jungseong> for JungseongCharacter {
     }
 }
 
-impl From<&JungseongCharacter> for Jungseong {
-    fn from(item: &JungseongCharacter) -> Jungseong {
-        Jungseong::Normal(item.clone())
+impl JungseongCharacter {
+    pub fn to_normal(&self) -> Jungseong {
+        Jungseong::Normal(self.clone())
+    }
+
+    pub fn to_compat(&self) -> Jungseong {
+        Jungseong::Compat(self.clone())
     }
 }
 
