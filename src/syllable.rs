@@ -20,36 +20,36 @@ impl TryFrom<u32> for Syllable {
     }
 }
 
-impl TryFrom<&char> for Syllable {
+impl TryFrom<char> for Syllable {
     type Error = ();
 
-    fn try_from(item: &char) -> Result<Self, Self::Error> {
+    fn try_from(item: char) -> Result<Self, Self::Error> {
         if item.is_syllable() {
-            Ok(Syllable(*item as u32))
+            Ok(Syllable(item as u32))
         } else {
             Err(())
         }
     }
 }
 
-impl From<&Syllable> for u32 {
-    fn from(item: &Syllable) -> u32 {
+impl From<Syllable> for u32 {
+    fn from(item: Syllable) -> u32 {
         item.0
     }
 }
 
-impl From<&Syllable> for char {
-    fn from(item: &Syllable) -> char {
+impl From<Syllable> for char {
+    fn from(item: Syllable) -> char {
         std::char::from_u32(item.0).unwrap_or_else(|| unreachable!())
     }
 }
 
-impl TryFrom<(&u32, &u32, Option<u32>)> for Syllable {
+impl TryFrom<(u32, u32, Option<u32>)> for Syllable {
     type Error = ();
 
-    fn try_from(item: (&u32, &u32, Option<u32>)) -> Result<Self, Self::Error> {
-        let choseong = Choseong::try_from(*item.0)?.to_composable();
-        let jungseong = Jungseong::try_from(*item.1)?.to_composable();
+    fn try_from(item: (u32, u32, Option<u32>)) -> Result<Self, Self::Error> {
+        let choseong = Choseong::try_from(item.0)?.to_composable();
+        let jungseong = Jungseong::try_from(item.1)?.to_composable();
         let jongseong = match item.2 {
             Some(code) => Jongseong::try_from(code)?.to_composable(),
             None => 0,
@@ -59,22 +59,18 @@ impl TryFrom<(&u32, &u32, Option<u32>)> for Syllable {
     }
 }
 
-impl TryFrom<(&char, &char, Option<char>)> for Syllable {
+impl TryFrom<(char, char, Option<char>)> for Syllable {
     type Error = ();
 
-    fn try_from(item: (&char, &char, Option<char>)) -> Result<Self, Self::Error> {
-        Syllable::try_from((
-            &(*item.0 as u32),
-            &(*item.1 as u32),
-            item.2.map(|code| code as u32),
-        ))
+    fn try_from(item: (char, char, Option<char>)) -> Result<Self, Self::Error> {
+        Syllable::try_from((item.0 as u32, item.1 as u32, item.2.map(|code| code as u32)))
     }
 }
 
-impl TryFrom<(&Choseong, &Jungseong, Option<&Jongseong>)> for Syllable {
+impl TryFrom<(Choseong, Jungseong, Option<Jongseong>)> for Syllable {
     type Error = ();
 
-    fn try_from(item: (&Choseong, &Jungseong, Option<&Jongseong>)) -> Result<Self, Self::Error> {
+    fn try_from(item: (Choseong, Jungseong, Option<Jongseong>)) -> Result<Self, Self::Error> {
         let choseong = item.0.to_composable();
         let jungseong = item.1.to_composable();
         let jongseong = item
@@ -86,8 +82,8 @@ impl TryFrom<(&Choseong, &Jungseong, Option<&Jongseong>)> for Syllable {
     }
 }
 
-impl From<&Syllable> for (u32, u32, Option<u32>) {
-    fn from(item: &Syllable) -> (u32, u32, Option<u32>) {
+impl From<Syllable> for (u32, u32, Option<u32>) {
+    fn from(item: Syllable) -> (u32, u32, Option<u32>) {
         let (choseong, jungseong, jongseong): (char, char, Option<char>) = item.into();
 
         (
@@ -98,17 +94,17 @@ impl From<&Syllable> for (u32, u32, Option<u32>) {
     }
 }
 
-impl From<&Syllable> for (char, char, Option<char>) {
-    fn from(item: &Syllable) -> (char, char, Option<char>) {
-        let choseong: char = match &Choseong::try_from(item.0) {
+impl From<Syllable> for (char, char, Option<char>) {
+    fn from(item: Syllable) -> (char, char, Option<char>) {
+        let choseong: char = match Choseong::try_from(item.0) {
             Ok(character) => character.into(),
             Err(_) => unreachable!(),
         };
-        let jungseong: char = match &Jungseong::try_from(item.0) {
+        let jungseong: char = match Jungseong::try_from(item.0) {
             Ok(character) => character.into(),
             Err(_) => unreachable!(),
         };
-        let jongseong: Option<char> = match &Jongseong::try_from(item.0) {
+        let jongseong: Option<char> = match Jongseong::try_from(item.0) {
             Ok(character) => Some(character.into()),
             Err(_) => None,
         };
@@ -117,8 +113,8 @@ impl From<&Syllable> for (char, char, Option<char>) {
     }
 }
 
-impl From<&Syllable> for Option<(Choseong, Jungseong, Option<Jongseong>)> {
-    fn from(item: &Syllable) -> Option<(Choseong, Jungseong, Option<Jongseong>)> {
+impl From<Syllable> for (Choseong, Jungseong, Option<Jongseong>) {
+    fn from(item: Syllable) -> (Choseong, Jungseong, Option<Jongseong>) {
         let choseong: Choseong = match Choseong::try_from(item.0) {
             Ok(character) => character.into(),
             Err(_) => unreachable!(),
@@ -132,7 +128,7 @@ impl From<&Syllable> for Option<(Choseong, Jungseong, Option<Jongseong>)> {
             Err(_) => None,
         };
 
-        Some((choseong, jungseong, jongseong))
+        (choseong, jungseong, jongseong)
     }
 }
 

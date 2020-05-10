@@ -91,8 +91,8 @@ impl JongseongInformation for char {
     }
 }
 
-impl From<&Jongseong> for JongseongCharacter {
-    fn from(item: &Jongseong) -> JongseongCharacter {
+impl From<Jongseong> for JongseongCharacter {
+    fn from(item: Jongseong) -> JongseongCharacter {
         match item {
             Jongseong::Normal(character) => character.clone(),
             Jongseong::Compat(character) => character.clone(),
@@ -177,8 +177,8 @@ impl TryFrom<u32> for Jongseong {
     }
 }
 
-impl From<&Jongseong> for u32 {
-    fn from(item: &Jongseong) -> Self {
+impl From<Jongseong> for u32 {
+    fn from(item: Jongseong) -> Self {
         match item {
             Jongseong::Normal(character) => match character {
                 Giyeok => 0x11A8,
@@ -250,8 +250,8 @@ impl TryFrom<char> for Jongseong {
     }
 }
 
-impl From<&Jongseong> for char {
-    fn from(item: &Jongseong) -> char {
+impl From<Jongseong> for char {
+    fn from(item: Jongseong) -> char {
         match item {
             Jongseong::Normal(character) => match character {
                 Giyeok => '\u{11A8}',

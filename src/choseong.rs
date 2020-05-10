@@ -91,8 +91,8 @@ impl ChoseongInformation for char {
     }
 }
 
-impl From<&Choseong> for ChoseongCharacter {
-    fn from(item: &Choseong) -> ChoseongCharacter {
+impl From<Choseong> for ChoseongCharacter {
+    fn from(item: Choseong) -> ChoseongCharacter {
         match item {
             Choseong::Normal(character) => character.clone(),
             Choseong::Compat(character) => character.clone(),
@@ -110,8 +110,8 @@ impl ChoseongCharacter {
     }
 }
 
-impl From<&ChoseongCharacter> for Choseong {
-    fn from(item: &ChoseongCharacter) -> Choseong {
+impl From<ChoseongCharacter> for Choseong {
+    fn from(item: ChoseongCharacter) -> Choseong {
         Choseong::Normal(item.clone())
     }
 }
@@ -167,8 +167,8 @@ impl TryFrom<u32> for Choseong {
     }
 }
 
-impl From<&Choseong> for u32 {
-    fn from(item: &Choseong) -> Self {
+impl From<Choseong> for u32 {
+    fn from(item: Choseong) -> Self {
         match item {
             Choseong::Normal(character) => match character {
                 Giyeok => 0x1100,
@@ -224,8 +224,8 @@ impl TryFrom<char> for Choseong {
     }
 }
 
-impl From<&Choseong> for char {
-    fn from(item: &Choseong) -> char {
+impl From<Choseong> for char {
+    fn from(item: Choseong) -> char {
         match item {
             Choseong::Normal(character) => match character {
                 Giyeok => '\u{1100}',
