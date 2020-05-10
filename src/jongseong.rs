@@ -1,10 +1,21 @@
 use crate::characters::{JongseongCharacter::*, *};
+use crate::constants::*;
+use crate::syllable::*;
 use std::convert::TryFrom;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Jongseong {
     Normal(JongseongCharacter),
     Compat(JongseongCharacter),
+}
+
+fn to_code(code: u32) -> u32 {
+    if code.is_syllable() {
+        let value = (code - HANGEUL_OFFSET) % JONGSEONG_COUNT;
+        value + JONGSEONG_START - 1
+    } else {
+        code
+    }
 }
 
 pub trait JongseongInformation {
@@ -42,15 +53,15 @@ impl JongseongInformation for u32 {
     }
 
     fn has_jongseong(&self) -> bool {
-        JongseongCharacter::to_code(*self).is_jongseong()
+        to_code(*self).is_jongseong()
     }
 
     fn has_normal_jongseong(&self) -> bool {
-        JongseongCharacter::to_code(*self).is_normal_jongseong()
+        to_code(*self).is_normal_jongseong()
     }
 
     fn has_compat_jongseong(&self) -> bool {
-        JongseongCharacter::to_code(*self).is_compat_jongseong()
+        to_code(*self).is_compat_jongseong()
     }
 }
 
@@ -103,7 +114,7 @@ impl TryFrom<u32> for Jongseong {
     type Error = ();
 
     fn try_from(item: u32) -> Result<Self, Self::Error> {
-        let character = match JongseongCharacter::to_code(item) {
+        let character = match to_code(item) {
             0x11A8 => Jongseong::Normal(Giyeok),
             0x11A9 => Jongseong::Normal(SsangGiyeok),
             0x11AA => Jongseong::Normal(GiyeokSiot),

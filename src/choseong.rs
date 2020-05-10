@@ -1,10 +1,21 @@
 use crate::characters::{ChoseongCharacter::*, *};
+use crate::constants::*;
+use crate::syllable::*;
 use std::convert::TryFrom;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub enum Choseong {
     Normal(ChoseongCharacter),
     Compat(ChoseongCharacter),
+}
+
+fn to_code(code: u32) -> u32 {
+    if code.is_syllable() {
+        let value = (code - HANGEUL_OFFSET) / (JUNGSEONG_COUNT * JONGSEONG_COUNT);
+        value + CHOSEONG_START
+    } else {
+        code
+    }
 }
 
 pub trait ChoseongInformation {
@@ -42,15 +53,15 @@ impl ChoseongInformation for u32 {
     }
 
     fn has_choseong(&self) -> bool {
-        ChoseongCharacter::to_code(*self).is_choseong()
+        to_code(*self).is_choseong()
     }
 
     fn has_normal_choseong(&self) -> bool {
-        ChoseongCharacter::to_code(*self).is_normal_choseong()
+        to_code(*self).is_normal_choseong()
     }
 
     fn has_compat_choseong(&self) -> bool {
-        ChoseongCharacter::to_code(*self).is_compat_choseong()
+        to_code(*self).is_compat_choseong()
     }
 }
 
@@ -109,7 +120,7 @@ impl TryFrom<u32> for Choseong {
     type Error = ();
 
     fn try_from(item: u32) -> Result<Self, Self::Error> {
-        let character = match ChoseongCharacter::to_code(item) {
+        let character = match to_code(item) {
             0x1100 => Choseong::Normal(Giyeok),
             0x1101 => Choseong::Normal(SsangGiyeok),
             0x1102 => Choseong::Normal(Nieun),

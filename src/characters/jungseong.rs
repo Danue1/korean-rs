@@ -1,6 +1,5 @@
 use self::JungseongCharacter::*;
 use crate::constants::*;
-use crate::syllable::*;
 use crate::CharacterInformation;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]
@@ -50,18 +49,6 @@ pub enum JungseongCharacter {
 }
 
 impl JungseongCharacter {
-    pub(crate) fn to_code(code: u32) -> u32 {
-        if code.is_syllable() {
-            let jongseong_code = (code - HANGEUL_OFFSET) % JUNGSEONG_COUNT;
-            let value = ((code - HANGEUL_OFFSET - jongseong_code)
-                % (JUNGSEONG_COUNT * JONGSEONG_COUNT))
-                / JUNGSEONG_COUNT;
-            value + JUNGSEONG_START
-        } else {
-            code
-        }
-    }
-
     pub fn to_index(&self) -> u32 {
         match self {
             A => 0,
