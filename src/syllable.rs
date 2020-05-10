@@ -146,7 +146,7 @@ pub trait SyllableInformation {
 
 impl SyllableInformation for u32 {
     fn is_hangeul(&self) -> bool {
-        self.is_syllable() || self.is_jamo() || self.is_compat_jamo()
+        self.is_syllable() || self.is_jamo()
     }
 
     fn is_syllable(&self) -> bool {
