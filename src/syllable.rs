@@ -140,6 +140,7 @@ pub trait SyllableInformation {
     fn is_hangeul(&self) -> bool;
     fn is_syllable(&self) -> bool;
     fn is_jamo(&self) -> bool;
+    fn is_normal_jamo(&self) -> bool;
     fn is_compat_jamo(&self) -> bool;
 }
 
@@ -153,6 +154,10 @@ impl SyllableInformation for u32 {
     }
 
     fn is_jamo(&self) -> bool {
+        self.is_normal_jamo() || self.is_compat_jamo()
+    }
+
+    fn is_normal_jamo(&self) -> bool {
         matches!(self, JAMO_START..=JAMO_END)
     }
 
@@ -174,6 +179,10 @@ impl SyllableInformation for char {
         (*self as u32).is_jamo()
     }
 
+    fn is_normal_jamo(&self) -> bool {
+        (*self as u32).is_normal_jamo()
+    }
+
     fn is_compat_jamo(&self) -> bool {
         (*self as u32).is_compat_jamo()
     }
@@ -184,8 +193,24 @@ impl ChoseongInformation for Syllable {
         self.0.is_choseong()
     }
 
+    fn is_normal_choseong(&self) -> bool {
+        self.0.is_normal_choseong()
+    }
+
+    fn is_compat_choseong(&self) -> bool {
+        self.0.is_compat_choseong()
+    }
+
     fn has_choseong(&self) -> bool {
         self.0.has_choseong()
+    }
+
+    fn has_normal_choseong(&self) -> bool {
+        self.0.has_normal_choseong()
+    }
+
+    fn has_compat_choseong(&self) -> bool {
+        self.0.has_compat_choseong()
     }
 }
 
@@ -194,8 +219,24 @@ impl JungseongInformation for Syllable {
         self.0.is_jungseong()
     }
 
+    fn is_normal_jungseong(&self) -> bool {
+        self.0.is_normal_jungseong()
+    }
+
+    fn is_compat_jungseong(&self) -> bool {
+        self.0.is_compat_jungseong()
+    }
+
     fn has_jungseong(&self) -> bool {
         self.0.has_jungseong()
+    }
+
+    fn has_normal_jungseong(&self) -> bool {
+        self.0.has_normal_jungseong()
+    }
+
+    fn has_compat_jungseong(&self) -> bool {
+        self.0.has_compat_jungseong()
     }
 }
 
@@ -204,7 +245,23 @@ impl JongseongInformation for Syllable {
         self.0.is_jongseong()
     }
 
+    fn is_normal_jongseong(&self) -> bool {
+        self.0.is_normal_jongseong()
+    }
+
+    fn is_compat_jongseong(&self) -> bool {
+        self.0.is_compat_jongseong()
+    }
+
     fn has_jongseong(&self) -> bool {
         self.0.has_jongseong()
+    }
+
+    fn has_normal_jongseong(&self) -> bool {
+        self.0.has_normal_jongseong()
+    }
+
+    fn has_compat_jongseong(&self) -> bool {
+        self.0.has_compat_jongseong()
     }
 }
